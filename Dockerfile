@@ -1,15 +1,16 @@
 FROM ubuntu:latest AS build
 
-RUN apt-get update 
-RUN apt-get install openjdk-26-jdk -y
+RUN apt-get update && apt-get install -y openjdk-26-jdk maven
 
+WORKDIR /app
 COPY . .
-
-RUN apt-get install maven -y
 RUN mvn clean install
 
+FROM ubuntu:latest
+RUN apt-get update && apt-get install -y openjdk-26-jre-headless && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY --from=build /app/target/todolist-1.0.0.jar app.jar
+
 EXPOSE 8080
-
-COPY --from=build /target/todolist-1.0.0.jar app.jar
-
 ENTRYPOINT ["java", "-jar", "app.jar"]
