@@ -1,7 +1,8 @@
 FROM ubuntu:latest AS build
 
 WORKDIR /app
-RUN apt-get update && apt-get install -y openjdk-26-jdk maven ca-certificates && rm -rf /var/lib/apt/lists/*
+RUN apt-get update 
+RUN apt-get install openjdk-26-jdk maven -y 
 
 COPY . .
 
